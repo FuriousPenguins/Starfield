@@ -1,41 +1,54 @@
 int centerx = 250;
 int centery = 250;
+int countOdd = 0;
+int lastTime;
+
 Particle[] particles;
-Particle[] secondParticles;
+Particle[] oddparticles;
 Particle[] thirdParticles;
 public void setup()
 {
 	size(500,500);
 	background(255);
 	particles = new Particle[150];
-	particles[0] = new OddballParticle();
-	particles[1] = new JumboParticle();
-	for(int i = 2; i < particles.length; i++) {
+	particles[0] = new JumboParticle();
+	for(int i = 1; i < particles.length; i++) {
 		particles[i] = new NormalParticle();
 	}
-	secondParticles = new Particle[150];
-	for(int i = 0; i < secondParticles.length; i++) {
-		secondParticles[i] = new NormalParticle();
+	oddparticles = new Particle[10];
+	for(int i = 1; i <= oddparticles.length; i++) {
+		oddparticles[i-1] = new OddballParticle((i/10));
 	}
 	thirdParticles = new Particle[150];
 	for(int i = 0; i < thirdParticles.length; i++) {
 		thirdParticles[i] = new NormalParticle();
 	}
+	lastTime = millis();
 }
 public void draw()
 {
 	fill(255,255,255,40);
 	rect(0,0,500,500);
+
+	if (countOdd < oddparticles.length) {
+		if ( millis() - lastTime > 1000 ) {
+		    println( "do things every 1 seconds");
+		    lastTime = millis();
+		    countOdd++;
+		}
+	}
+
+
 	for(int i = 0; i < particles.length; i ++ ) {
 		particles[i].move();
 		particles[i].show();
 	}
-	if(millis() > 3000) {
-		for(int i = 0; i < secondParticles.length; i++) {
-			secondParticles[i].move();
-			secondParticles[i].show();
-		}
+
+	for(int i = 0; i < countOdd; i++) {
+		oddparticles[i].move();
+		oddparticles[i].show();
 	}
+
 	if(millis() > 6000) {
 		for(int i = 0; i < thirdParticles.length; i++) {
 			thirdParticles[i].move();
@@ -81,24 +94,46 @@ interface Particle
 }
 class OddballParticle implements Particle
 {
-	double x,y,angle,speed;
+	double x,y,angle,speed,cosAngle,sinAngle;
 	int red,green,blue;
 	int size;
-
-	OddballParticle() {
-		x = (Math.random()*501);
-		y = (Math.random()*501);
-		angle = (Math.random())*(2*Math.PI);
+	float t = -1;
+	boolean directionT = true;
+	OddballParticle(int initialAngle) {
+		x = 250;
+		y = 250;
+		angle = initialAngle*(2*Math.PI);
 		speed = 0.5;
 		red = (int)(Math.random()*256);
 		green = (int)(Math.random()*256);
 		blue = (int)(Math.random()*256);
 		size = 15;
+		cosAngle = angle;
+		sinAngle = angle;
 	}
 
 	public void move() {
-		x += Math.cos(angle) * speed/Math.random();
-		y += Math.sin(angle) * speed/Math.random();
+		// cosAngle += (Math.PI)/100;
+		// sinAngle += (Math.PI)/100;
+
+		if(t > 1) {
+			directionT = false;
+		}
+		else if(t < -1) {
+			directionT = true;
+		}
+
+		if(directionT == true) {
+			t += .01;
+		}
+		else if(directionT == false) {
+			t -= .01;
+		}
+		println(t);
+		// x += Math.cos(cosAngle) * speed*10;
+		// y += Math.sin(sinAngle) * speed*10;
+		x = Math.sin(t)*Math.cos(t)*(-Math.log(1-Math.abs(t)))/Math.abs(t);
+		y = sqrt(Math.abs(t))*cos(t);
 	}
 	public void show() {
 		strokeWeight(0);
