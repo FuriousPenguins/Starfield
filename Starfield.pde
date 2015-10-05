@@ -116,24 +116,26 @@ class OddballParticle implements Particle
 		// cosAngle += (Math.PI)/100;
 		// sinAngle += (Math.PI)/100;
 
-		if(t > 1) {
-			directionT = false;
-		}
-		else if(t < -1) {
-			directionT = true;
-		}
+		// if(t > 1) {
+		// 	directionT = false;
+		// }
+		// else if(t < -1) {
+		// 	directionT = true;
+		// }
 
-		if(directionT == true) {
-			t += .01;
-		}
-		else if(directionT == false) {
-			t -= .01;
-		}
+		// if(directionT == true) {
+		// 	t += .05;
+		// }
+		// else if(directionT == false) {
+		// 	t -= .05;
+		// }
+		t += 0.5;
 		println(t);
 		// x += Math.cos(cosAngle) * speed*10;
 		// y += Math.sin(sinAngle) * speed*10;
-		x = Math.sin(t)*Math.cos(t)*(-Math.log(1-Math.abs(t)))/Math.abs(t);
-		y = sqrt(Math.abs(t))*cos(t);
+		float sin3 = pow((float)Math.sin(t), (int)3);
+		x = (16*sin3)*4+250;
+		y = -((13*(Math.cos(t)))-(5*(Math.cos(2*t)))-(2*(Math.cos(3*t)))-((Math.cos(4*t))))*4+250;
 	}
 	public void show() {
 		strokeWeight(0);
