@@ -3,6 +3,12 @@ int centery = 250;
 int countOdd = 0;
 int lastTime;
 
+int heartSize = 1;
+int heartR = 251;
+int heartG = 174;
+int heartB;
+
+
 Particle[] particles;
 Particle[] oddparticles;
 Particle[] thirdParticles;
@@ -13,7 +19,7 @@ public void setup()
 	particles = new Particle[150];
 	particles[0] = new JumboParticle();
 	for(int i = 1; i < particles.length; i++) {
-		particles[i] = new NormalParticle();
+		particles[i] = new NormalParticle(false);
 	}
 	oddparticles = new Particle[10];
 	for(int i = 1; i <= oddparticles.length; i++) {
@@ -21,13 +27,13 @@ public void setup()
 	}
 	thirdParticles = new Particle[150];
 	for(int i = 0; i < thirdParticles.length; i++) {
-		thirdParticles[i] = new NormalParticle();
+		thirdParticles[i] = new NormalParticle(true);
 	}
 	lastTime = millis();
 }
 public void draw()
 {
-	fill(255,255,255,40);
+	fill(0,0,0,40);
 	rect(0,0,500,500);
 
 	if (countOdd < oddparticles.length) {
@@ -35,6 +41,10 @@ public void draw()
 		    println( "do things every 1 seconds");
 		    lastTime = millis();
 		    countOdd++;
+		    heartSize++;
+   //  		heartR = (int)(Math.random()*86+174);
+			// heartG = (int)(Math.random()*256);
+			heartB = (int)(Math.random()*86+174);
 		}
 	}
 
@@ -61,7 +71,20 @@ class NormalParticle implements Particle
 	double x,y,angle,speed,size;
 	int red,green,blue;
 	boolean ismoving;
+	boolean direction;
 
+	NormalParticle(boolean spinDirection) {
+		ismoving = true;
+		x = 250;
+		y = 250;
+		angle = (Math.random())*(2*Math.PI);
+		speed = 0.5;
+		red = (int)(Math.random()*256);
+		green = (int)(Math.random()*256);
+		blue = (int)(Math.random()*256);
+		size = 5;
+		direction = spinDirection;
+	}
 	NormalParticle() {
 		ismoving = true;
 		x = 250;
@@ -74,7 +97,13 @@ class NormalParticle implements Particle
 		size = 5;
 	}
 	public void move() {
-		angle += ((Math.PI)/100);
+		if (direction == true) {
+			angle -= ((Math.PI)/100);
+		}
+		else {
+			angle += ((Math.PI)/100);
+		}
+		
 		x += Math.cos(angle) * speed*10;
 		y += Math.sin(angle) * speed*10;
 	}
@@ -113,32 +142,17 @@ class OddballParticle implements Particle
 	}
 
 	public void move() {
-		// cosAngle += (Math.PI)/100;
-		// sinAngle += (Math.PI)/100;
 
-		// if(t > 1) {
-		// 	directionT = false;
-		// }
-		// else if(t < -1) {
-		// 	directionT = true;
-		// }
-
-		// if(directionT == true) {
-		// 	t += .05;
-		// }
-		// else if(directionT == false) {
-		// 	t -= .05;
-		// }
 		t += 0.5;
-		println(t);
 		// x += Math.cos(cosAngle) * speed*10;
 		// y += Math.sin(sinAngle) * speed*10;
 		float sin3 = pow((float)Math.sin(t), (int)3);
-		x = (16*sin3)*4+250;
-		y = -((13*(Math.cos(t)))-(5*(Math.cos(2*t)))-(2*(Math.cos(3*t)))-((Math.cos(4*t))))*4+250;
+		x = (16*sin3)*heartSize+250;
+		y = -((13*(Math.cos(t)))-(5*(Math.cos(2*t)))-(2*(Math.cos(3*t)))-((Math.cos(4*t))))*heartSize+250;
 	}
 	public void show() {
-		strokeWeight(0);
+		strokeWeight(1);
+		fill(heartR,heartG,heartB);
 		ellipse((float)x,(float)y,(float)size,(float)size);
 		ellipse((float)x,(float)y,(float)size/3*2,(float)size/3*2);
 		ellipse((float)x,(float)y,(float)size/3,(float)size/3);
