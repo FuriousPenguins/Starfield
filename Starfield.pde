@@ -1,9 +1,11 @@
 int centerx = 250;
 int centery = 250;
 int countOdd = 0;
-int lastTime;
 
-int heartSize = 1;
+int oneseclastTime;
+int fourseclastTime;
+
+float heartSize = 1;
 int heartR = 251;
 int heartG = 174;
 int heartB;
@@ -12,13 +14,17 @@ int heartB;
 Particle[] particles;
 Particle[] oddparticles;
 Particle[] thirdParticles;
+Particle[] jumboparticles;
+
 public void setup()
 {
 	size(500,500);
 	background(255);
 	particles = new Particle[150];
-	particles[0] = new JumboParticle();
-	for(int i = 1; i < particles.length; i++) {
+	for (int i=0; i < 10; i++) {
+		particles[i] = new JumboParticle(i);
+	}
+	for(int i = 10; i < particles.length; i++) {
 		particles[i] = new NormalParticle(false);
 	}
 	oddparticles = new Particle[10];
@@ -29,7 +35,12 @@ public void setup()
 	for(int i = 0; i < thirdParticles.length; i++) {
 		thirdParticles[i] = new NormalParticle(true);
 	}
-	lastTime = millis();
+	jumboparticles = new Particle[10];
+	for(int i=0; i< jumboparticles.length; i++) {
+		jumboparticles[i] = new JumboParticle();
+	}
+	oneseclastTime = millis();
+	fourseclastTime = millis();
 }
 public void draw()
 {
@@ -37,27 +48,39 @@ public void draw()
 	rect(0,0,500,500);
 
 	if (countOdd < oddparticles.length) {
-		if ( millis() - lastTime > 1000 ) {
+		if ( millis() - oneseclastTime > 1000 ) {
 		    println( "do things every 1 seconds");
-		    lastTime = millis();
+		    oneseclastTime = millis();
 		    countOdd++;
-		    heartSize++;
+		    heartSize+= 0.8;
    //  		heartR = (int)(Math.random()*86+174);
 			// heartG = (int)(Math.random()*256);
 			heartB = (int)(Math.random()*86+174);
 		}
 	}
 
+	if (millis() - fourseclastTime > 4000) {
+	    for(int i=0; i < 10;i++) {
+	    	((JumboParticle)particles[i]).x = 250;
+	    	((JumboParticle)particles[i]).y = 250;
+	    }
+		fourseclastTime = millis();
+	}
 
 	for(int i = 0; i < particles.length; i ++ ) {
 		particles[i].move();
 		particles[i].show();
 	}
 
+	for(int i = 0; i < jumboparticles.length; i++) {
+		particles[i].move();
+		particles[i].show();
+	}
 	for(int i = 0; i < countOdd; i++) {
 		oddparticles[i].move();
 		oddparticles[i].show();
 	}
+
 
 	if(millis() > 6000) {
 		for(int i = 0; i < thirdParticles.length; i++) {
@@ -104,8 +127,8 @@ class NormalParticle implements Particle
 			angle += ((Math.PI)/100);
 		}
 		
-		x += Math.cos(angle) * speed*10;
-		y += Math.sin(angle) * speed*10;
+		x += Math.cos(angle) * speed*8;
+		y += Math.sin(angle) * speed*8;
 	}
 
 	public void show() {
@@ -160,8 +183,19 @@ class OddballParticle implements Particle
 }
 class JumboParticle extends NormalParticle
 {
+	JumboParticle() {
+
+	}
+	JumboParticle(int angleSet){
+		angle = (Math.PI*2)/10 * angleSet;
+	}
+	public void move() {
+		x += Math.cos(angle);
+		y += Math.sin(angle);
+	}
 	public void show() {
 		strokeWeight(0);
-		ellipse((float)x,(float)y,(float)size*2,(float)size*2);
+		fill(heartR,heartG,heartB);
+		ellipse((float)x,(float)y,(float)size*5,(float)size*5);
 	}
 }
