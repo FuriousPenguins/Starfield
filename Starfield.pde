@@ -3,6 +3,7 @@ int centery = 250;
 int countOdd = 0;
 
 int oneseclastTime;
+int twoseclastTime;
 int fourseclastTime;
 
 float heartSize = 1;
@@ -40,11 +41,12 @@ public void setup()
 		jumboparticles[i] = new JumboParticle();
 	}
 	oneseclastTime = millis();
+	twoseclastTime = millis();
 	fourseclastTime = millis();
 }
 public void draw()
 {
-	fill(0,0,0,40);
+	fill(0,0,0,15);
 	rect(0,0,500,500);
 
 	if (countOdd < oddparticles.length) {
@@ -59,12 +61,19 @@ public void draw()
 		}
 	}
 
-	if (millis() - fourseclastTime > 4000) {
+	if (millis() - fourseclastTime > 5000) {
 	    for(int i=0; i < 10;i++) {
 	    	((JumboParticle)particles[i]).x = 250;
 	    	((JumboParticle)particles[i]).y = 250;
+	    	((JumboParticle)particles[i]).spin = false;
 	    }
 		fourseclastTime = millis();
+		twoseclastTime = millis();
+	}
+	if (millis() - twoseclastTime > 1500) {
+		for(int i = 0; i < 10; i++) {
+			((JumboParticle)particles[i]).spin = true;
+		}
 	}
 
 	for(int i = 0; i < particles.length; i ++ ) {
@@ -82,11 +91,9 @@ public void draw()
 	}
 
 
-	if(millis() > 6000) {
-		for(int i = 0; i < thirdParticles.length; i++) {
-			thirdParticles[i].move();
-			thirdParticles[i].show();
-		}
+	for(int i = 0; i < thirdParticles.length; i++) {
+		thirdParticles[i].move();
+		thirdParticles[i].show();
 	}
 }
 class NormalParticle implements Particle
@@ -183,6 +190,7 @@ class OddballParticle implements Particle
 }
 class JumboParticle extends NormalParticle
 {
+	boolean spin = false;
 	JumboParticle() {
 
 	}
@@ -190,8 +198,17 @@ class JumboParticle extends NormalParticle
 		angle = (Math.PI*2)/10 * angleSet;
 	}
 	public void move() {
-		x += Math.cos(angle);
-		y += Math.sin(angle);
+
+		if (spin == true) {
+			angle += ((Math.PI)/100);
+			x += Math.cos(angle)*8;
+			y += Math.sin(angle)*8;
+		}
+		else {
+			x += Math.cos(angle);
+			y += Math.sin(angle);
+		}
+
 	}
 	public void show() {
 		strokeWeight(0);
