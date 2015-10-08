@@ -1,6 +1,8 @@
 
 body {
-    background-image: url('http://www.desktopaper.com/wp-content/uploads/cool-wallpaper-backgrounds.jpg')
+    background-image: url('http://www.desktopaper.com/wp-content/uploads/cool-wallpaper-backgrounds.jpg');
+    background-size: 100%;
+    background-repeat: no-repeat;
     background-color: rgb(200,200,200);
     color: rgb(0,0,0);
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
