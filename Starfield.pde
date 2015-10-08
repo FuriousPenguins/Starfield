@@ -51,7 +51,6 @@ public void draw()
 
 	if (countOdd < oddparticles.length) {
 		if ( millis() - oneseclastTime > 1000 ) {
-		    println( "do things every 1 seconds");
 		    oneseclastTime = millis();
 		    countOdd++;
 		    heartSize+= 0.8;
